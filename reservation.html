@@ -1,0 +1,345 @@
+<meta charset="UTF-8">
+<html>
+    <head>
+        <title>Sélection de Siège</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900');
+            body {
+                margin: 0px;
+                padding: 0px;
+                font-family: 'Roboto';
+            }
+            #map {
+                width: 100%; height: 100%;
+                position: relative;
+                top: 0px; left: 0px;
+            }
+            .section {
+                position: absolute;
+                background: blue;
+            }
+            .section_name {
+                position: absolute;
+                left: 0px; top: 10%;
+                transform: translate(-100%, -50%);
+                padding-right: 5px;
+                font-size: 24px;
+                display: none;
+            }
+            .seat {
+                position: absolute;
+                height: 17px;
+                width: 16px;
+                line-height: 18px;
+                box-sizing: border-box;
+                margin: 2px;
+                overflow: hidden;
+                border: 1px solid #aac6fd;
+                background-color: rgb(200 219 255);
+                border-radius: 5px 5px 0px 0px ;
+                text-align: center;
+                font-size: 10px;
+                cursor: pointer;
+            }
+            .seat:hover {
+                border: 1px solid rgb(247, 96, 9);
+                background-color: rgb(243, 149, 8);
+                
+            }
+            .seat_taken {
+                background: #a0a0a0;
+                color: rgb(131, 131, 131);
+                cursor: not-allowed;
+                border: 0px !important;
+            }
+            .seat_mine {
+                border: 0px !important;
+                font-weight:800;
+                background: #38f33e;
+            }
+            #header {
+                height: 80px;
+                background: #f0f0f8;
+                position: fixed;
+                bottom: 0px;
+                width: 100%;
+                border-top: 1px solid black;
+                display: none;
+                line-height: 80px;
+                font-size: 20px;
+                z-index: 2;
+            }
+            #number_seats, #seat_list {
+                display: inline-block;
+                vertical-align: middle;
+                padding: 0px 30px;
+            }
+            .seat_ticket {
+                font-size: 300;
+                padding: 2px 6px;
+                font-size: 15px;
+                background: white;
+                border-radius: 7px;
+                border: 1px solid rgb(100, 100, 100);
+                vertical-align: middle;
+                margin: 0px 3px;
+            }
+            #save_button {
+                float: right;
+                margin: 25px;
+                font-size: 20px;
+                z-index: 150;
+            }
+            #email_prompt {
+                position: absolute;
+                top: 50%; left: 50%;
+                transform: translate(-50%, -50%);
+                width: 600px;
+                height: 400px;
+                padding: 80px;
+                text-align: center;
+                line-height: 2.0;
+                font-size: 20px;
+                z-index: 3;
+            }
+            .section_add {
+                font-size: 15px;
+                font-weight: 600;
+                color: #a0a0a0;
+                display: none;
+            }
+            .seat_leg {
+                float: left;
+                height: 17px;
+                width: 16px;
+                line-height: 18px;
+                box-sizing: border-box;
+                margin: 5px;
+                border-radius: 5px 5px 0px 0px ;
+                text-align: center;
+                font-size: 10px;
+                cursor: pointer;}
+            #game{
+                font-size: 20px;
+                font-weight: 700;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="header">
+            <div id="number_seats">Selection des sièges / Seat selection: <span id="n_selected"></span> / <span id="n_total"></span></div>
+            <button id="save_button" onclick="save_seats();">Confirmer / Save Seat Selection</button>
+            <div id="seat_list">Sièges/Seats: <span id="seat_list_containter"></span></div>
+            
+        </div>
+        <div id="email_prompt">
+            Veuillez entrer votre email de reservation:
+            <form onsubmit="return submit_email();">
+                <input type="email" name="email" placeholder="Your email" id="email">
+                <button>Valider</button>
+            </form>
+        </div>
+        <!-- <div id="game" style="position:absolute; left: 40px;top: 40px;">Game 1 vs Ottawa // Dimanche 25 juillet - 13h </div> -->
+        <div style="position:absolute; left: 3850px;top: 40px;">. </div>
+        <div class="section_add" style="position:absolute; left: 250px;top: 120px; height: 75px; width: 200px; background-color: rgb(100, 100, 100);">  </div>
+        <div class="section_add" style="position: absolute; left: 120px; top: 80px;">L1H</div>
+        <div class="section_add" style="position: absolute; left: 560px; top: 80px;">L2H</div>
+        <div class="section_add" style="position: absolute; left: 920px; top: 80px;">K1H</div>
+        <div class="section_add" style="position: absolute; left: 1320px; top: 80px;">K2H</div>
+        <div class="section_add" style="position: absolute; left: 1740px; top: 80px;">J1H</div>
+        <div class="section_add" style="position: absolute; left: 2140px; top: 80px;">J2H</div>
+        <div class="section_add" style="position: absolute; left: 2520px; top: 80px;">H1H</div>
+        <div class="section_add" style="position: absolute; left: 2900px; top: 80px;">H2H</div>
+        <div class="section_add" style="position: absolute; left: 3280px; top: 80px;">G1H</div>
+        <div class="section_add" style="position: absolute; left: 3660px; top: 80px;">G2H</div>
+        
+        <div class="section_add" style="position: absolute; left: 240px; top: 480px;">L1</div>
+        <div class="section_add" style="position: absolute; left: 560px; top: 480px;">L2</div>
+        <div class="section_add" style="position: absolute; left: 940px; top: 480px;">K1</div>
+        <div class="section_add" style="position: absolute; left: 1320px; top: 380px;">K2</div>
+        <div class="section_add" style="position: absolute; left: 1740px; top: 380px;">J1</div>
+        <div class="section_add" style="position: absolute; left: 2140px; top: 380px;">J2</div>
+        <div class="section_add" style="position: absolute; left: 2520px; top: 380px;">H1</div>
+        <div class="section_add" style="position: absolute; left: 2900px; top: 480px;">H2</div>
+        <div class="section_add" style="position: absolute; left: 3280px; top: 480px;">G1</div>
+        <div class="section_add" style="position: absolute; left: 3600px; top: 480px;">G2</div>
+        
+        <div class="section_add" style="position: fixed; left: 35%; top: 560px; letter-spacing: 20px; font-weight: 400;"> ↓ TERRAIN / FIELD ↓</div>
+        <div class="section_add" style="position: fixed; left: 5%; top: 560px; font-size: 12px; line-height: 28px;"> 
+            <div class="seat_leg" style="background-color: rgb(200 219 255);">X</div><div style="float:left;margin-right: 20px;" >Siège disponible</div><br />
+            <div class="seat_leg" style="background-color:  rgb(131, 131, 131);">X</div><div style="float:left;margin-right: 20px;">Siège indisponible   </div><br />
+            <div class="seat_leg" style="background-color:  #38f33e;">X</div><div style="float:left;margin-right: 20px;">Votre siège</div>
+
+        </div>
+ 
+        <div id="map">
+            
+        </div>
+        <div></div>
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        var seat_size = 20; // 14 + 2 + 2 + 1 + 1
+        var taken_seats = [];
+        var my_seats = [], number_of_seats = 0;
+        var user_id = "empty";
+        var game_id = 1; // Change this from 1 to 4
+
+        var host_url = "https://newslens.berkeley.edu/";
+        
+        var map_structure = [
+       // Partie Supérieure
+       {"id": "L1H", "num_rows": 7, "num_cols": 13, "left": 60, "top": 120, "reverse": true},
+            {"id": "L2H", "num_rows": 7, "num_cols": 19, "left": 380, "top": 120, "col_offset": 13, "reverse": true},
+            {"id": "K1H", "num_rows": 7, "num_cols": 19, "left": 760, "top": 120, "reverse": true},
+            {"id": "K2H", "num_rows": 6, "num_cols": 21, "left": 1200, "top": 140, "col_offset": 19, "reverse": true},
+            {"id": "J1H", "num_rows": 6, "num_cols": 14, "left": 1620, "top": 140, "col_offset": 2,"reverse": true},
+            {"id": "J2H", "num_rows": 7, "num_cols": 19, "left": 1960, "top": 120, "col_offset": 18,"reverse": true},
+            {"id": "H1H", "num_rows": 7, "num_cols": 16, "left": 2340, "top": 120, "reverse": true},
+            {"id": "H2H", "num_rows": 7, "num_cols": 19, "left": 2720, "top": 120, "col_offset": 18,"reverse": true},
+            {"id": "G1H", "num_rows": 7, "num_cols": 19, "left": 3100, "top": 120, "reverse": true},
+            {"id": "G2H", "num_rows": 7, "num_cols": 13, "left": 3540, "top": 120, "col_offset": 19,"reverse": true},
+        
+               
+        // Partie inférieure
+            {"id": "L1", "num_rows": 8, "num_cols": 16, "left": 100, "top": 300},
+            {"id": "L2", "num_rows": 8, "num_cols": 15, "left": 420, "top": 300},
+            {"id": "K1", "num_rows": 8, "num_cols": 19, "left": 760, "top": 300, "col_offset": 15},
+            {"id": "K2", "num_rows": 3, "num_cols": 19, "left": 1140, "top": 300},
+            {"id": "J1", "num_rows": 3, "num_cols": 19, "left": 1560, "top": 300, "col_offset": 19},
+            {"id": "J2", "num_rows": 3, "num_cols": 18, "left": 1940, "top": 300},
+            {"id": "H1", "num_rows": 3, "num_cols": 19, "left": 2340, "top": 300, "col_offset": 18},
+            {"id": "H2", "num_rows": 8, "num_cols": 19, "left": 2720, "top": 300},
+            {"id": "G1", "num_rows": 8, "num_cols": 16, "left": 3140, "top": 300, "col_offset": 19},
+            {"id": "G2", "num_rows": 8, "num_cols": 15, "left": 3460, "top": 300},
+        ]
+
+        function is_seat_taken(seat_id) {
+            return taken_seats.indexOf(seat_id) >= 0;
+        }
+        function is_my_seat(seat_id) {
+            return my_seats.indexOf(seat_id) >= 0;
+        }
+
+        function findGetParameter(parameterName) {
+            var result = null,
+                tmp = [];
+            location.search.substr(1).split("&").forEach(function (item) {
+                tmp = item.split("=");
+                if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                });
+            return result;
+        }
+
+        function build_map() {
+
+            var get_game = findGetParameter("game")
+            if(get_game !== null && +get_game >= 1 && +get_game <= 4) {
+                game_id = +get_game;
+            }
+
+            $.getJSON(`${host_url}api/maxime/get_map/${game_id}/${user_id}`, function(data) {
+                taken_seats = data.taken_seats;
+                my_seats = data.my_seats;
+                number_of_seats = data.number_of_seats;
+                var map_HTML = "";
+                for(var section of map_structure) {
+                    var section_HTML = `<div class='section' style='top: ${section.top}px; left: ${section.left}px; height: ${seat_size*section.num_rows};'>`;
+                    section_HTML += `<div class='section_name'>${section.id}</div>`;
+                    
+                    var col_offset = (section.col_offset)?section.col_offset:0;
+                    for(var r = 1; r <= section.num_rows; r ++) {
+                        for(var c = 1; c <= section.num_cols; c ++) {
+                            var row_id = (section.reverse)?(section.num_rows-r+1):r;
+                            var col_id = c+col_offset;
+                            if(section.id == "L1H" && row_id >= 3 && col_id >= 9) {continue;}
+                            if(section.id == "L2H" && row_id >= 3 && col_id <= 18) {continue;}
+                            if(section.id == "L2H" && row_id <= 2 && col_id >= 30) {continue;}
+                            if(section.id == "K1H" && row_id <= 2 && col_id <= 2) {continue;}
+                            if(section.id == "K2H" && row_id <= 2 && col_id >= 36) {continue;}
+                            if(section.id == "J2H" && row_id <= 2 && col_id >= 35) {continue;}
+                            if(section.id == "H1H" && row_id <= 2 && col_id <= 2) {continue;}
+                            if(section.id == "H2H" && row_id <= 2 && col_id >= 36) {continue;}
+                            if(section.id == "G1H" && row_id <= 2 && col_id <= 3) {continue;}
+                            if(section.id == "K1" && row_id >= 4 && col_id >= 31) {continue;}
+                            if(section.id == "H2" && row_id >= 4 && col_id <= 4) {continue;}
+
+
+                            var seat_id = `${section.id}_${row_id}_${col_id}`;
+                            var seat_class = "";
+                            
+                            if(is_my_seat(seat_id)) {seat_class = "seat_mine";}
+                            else if(is_seat_taken(seat_id)) {seat_class = "seat_taken";}
+
+                            section_HTML += `<div class='seat ${seat_class}' id='${seat_id}' onclick='select_seat(this);' style='left: ${seat_size*(c-1)}px; top: ${seat_size*(r-1)}px;'>${col_id}</div>`;
+                        }
+                    }
+                    section_HTML += "</div>";
+                    map_HTML += section_HTML;
+                }
+                $("#map").html(map_HTML);
+                refresh_header();
+                
+            });
+        }
+        function refresh_header() {
+            $("#n_total").html(number_of_seats);
+            $("#n_selected").html(my_seats.length);
+            var seat_list_HTML = "";
+            for(var seat of my_seats) {
+                seat_list_HTML += `<span class='seat_ticket'>${seat}</span>`;
+            }
+            $("#seat_list_containter").html(seat_list_HTML);
+            $(".seat").removeClass("seat_mine");
+            for(var seat_id of my_seats) {
+                $(`#${seat_id}`).addClass('seat_mine');
+            }
+            $(".section_add").show()
+            $("#header").show();
+        }
+        function select_seat(obj) {
+            var seat_id = $(obj).attr("id");
+            if(is_my_seat(seat_id)) {
+                // Remove the seat from my list
+                var idx = my_seats.indexOf(seat_id);
+                my_seats.splice(idx, 1);
+                var idx = taken_seats.indexOf(seat_id);
+                taken_seats.splice(idx, 1);
+            }
+            else if(is_seat_taken(seat_id)) {
+                // We don't do anything... this seat is taken
+            }
+            else if(my_seats.length < number_of_seats) {
+                my_seats.push(seat_id);
+            }
+            refresh_header();
+        }
+        function save_seats() {
+            var seats = my_seats.join(",");
+            $.getJSON(`${host_url}/api/maxime/save_seats/${game_id}/${user_id}/${seats}`, function(return_code) {
+                if(return_code.code == 1) {
+                    alert("User ID incorrect. Merci de réouvrir l'URL qui vous a été envoyé.")
+                }
+                else if(return_code.code == 2) {
+                    alert("Vous avez sélectionné trop de sièges.")
+                }
+                else if(return_code.code == 3) {
+                    alert("Un des sièges sélectionné n'est plus disponible. Merci de rouvrir la page et réessayer.");
+                }
+                else if(return_code.code == 4) {
+                    alert("La selection n'est pas possible pour l'instant. Surement car le match a commencé.");
+                }
+                else {
+                    alert("Vos sièges ont étés sélectionné correctement. Merci!")
+                }
+            });
+        }
+        function submit_email() {
+            user_id = $("#email").val();
+            $("#email_prompt").hide();
+            build_map();
+            return false;
+        }
+    </script>
+</html>
