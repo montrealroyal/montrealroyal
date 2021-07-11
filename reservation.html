@@ -58,35 +58,33 @@
                 background: #38f33e;
             }
             #header {
-                height: 80px;
                 background: #f0f0f8;
-                position: fixed;
-                bottom: 0px;
+                position: absolute;
+                padding-top: 10px;
+                top: 700px;
                 width: 100%;
                 border-top: 1px solid black;
                 display: none;
-                line-height: 80px;
-                font-size: 20px;
+                font-size: 18px;
                 z-index: 2;
             }
             #number_seats, #seat_list {
-                display: inline-block;
+                /* display: inline-block; */
                 vertical-align: middle;
                 padding: 0px 30px;
             }
             .seat_ticket {
-                font-size: 300;
                 padding: 2px 6px;
                 font-size: 15px;
                 background: white;
                 border-radius: 7px;
                 border: 1px solid rgb(100, 100, 100);
                 vertical-align: middle;
-                margin: 0px 3px;
+                margin: 3px 3px;
+                display: inline-block;
             }
             #save_button {
-                float: right;
-                margin: 25px;
+                margin: 30px;
                 font-size: 20px;
                 z-index: 150;
             }
@@ -129,8 +127,8 @@
     <body>
         <div id="header">
             <div id="number_seats">Selection des sièges / Seat selection: <span id="n_selected"></span> / <span id="n_total"></span></div>
-            <button id="save_button" onclick="save_seats();">Confirmer / Save Seat Selection</button>
             <div id="seat_list">Sièges/Seats: <span id="seat_list_containter"></span></div>
+            <button id="save_button" onclick="save_seats();">Confirmer / Save Seat Selection</button>
             
         </div>
         <div id="email_prompt">
@@ -165,8 +163,8 @@
         <div class="section_add" style="position: absolute; left: 3280px; top: 480px;">G1</div>
         <div class="section_add" style="position: absolute; left: 3600px; top: 480px;">G2</div>
         
-        <div class="section_add" style="position: fixed; left: 35%; top: 560px; letter-spacing: 20px; font-weight: 400;"> ↓ TERRAIN / FIELD ↓</div>
-        <div class="section_add" style="position: fixed; left: 5%; top: 560px; font-size: 12px; line-height: 28px;"> 
+        <div class="section_add" style="position: absolute; left: 35%; top: 560px; letter-spacing: 20px; font-weight: 400;"> ↓ TERRAIN / FIELD ↓</div>
+        <div class="section_add" style="position: absolute; left: 5%; top: 560px; font-size: 12px; line-height: 28px;"> 
             <div class="seat_leg" style="background-color: rgb(200 219 255);">X</div><div style="float:left;margin-right: 20px;" >Siège disponible</div><br />
             <div class="seat_leg" style="background-color:  rgb(131, 131, 131);">X</div><div style="float:left;margin-right: 20px;">Siège indisponible   </div><br />
             <div class="seat_leg" style="background-color:  #38f33e;">X</div><div style="float:left;margin-right: 20px;">Votre siège</div>
