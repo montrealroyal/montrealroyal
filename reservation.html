@@ -237,7 +237,7 @@
                 game_id = +get_game;
             }
 
-            $.getJSON(`${host_url}api/maxime/get_map/${game_id}/${user_id}`, function(data) {
+            $.getJSON(`${host_url}/api/maxime/get_map/${game_id}/${user_id}`, function(data) {
                 taken_seats = data.taken_seats;
                 my_seats = data.my_seats;
                 number_of_seats = data.number_of_seats;
