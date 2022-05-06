@@ -1,0 +1,77 @@
+
+<!-- saved from url=(0042)http://tingo.ddns.net:4005/view_game_timer -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        * {
+            font-size: 20px;
+        }
+        button {
+            padding: 10px;
+            margin: 20px;
+        }
+        .active_quarter {
+            font-weight: bold;
+            background-color: #e0e0e0;
+
+        }
+    </style>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <h1>Game Timer</h1>
+    <div> <button id="quart" disabled="disabled">Q2</button>
+    <span id="timer_input">12:00</span></div><br>
+
+    <div>
+        <h1>AWAY: <span id="awayscore">4</span></h1>
+    </div>
+    <div>
+        <h1>HOME - MTL: <span id="homescore">0</span></h1>
+    </div>
+
+    <!-- Import jQuery -->
+    <script src="./view_game_timer_files/jquery.min.js.téléchargement"></script>
+    <script>
+        var latest_timer = 12*60;
+        var current_quarter = 'Q1';
+        var current_home = 0;
+        var current_away = 0;
+
+        function show_timer() {
+            var minutes = Math.floor(latest_timer / 60);
+            var seconds = (latest_timer % 60);
+            if (seconds < 10) {seconds = "0" + seconds;}
+            if (minutes < 10) {minutes = "0" + minutes;}
+            $("#timer_input").html(minutes + ":" + seconds);
+            $(".quarter").removeClass("active_quarter");
+            $("#" + current_quarter).addClass("active_quarter");
+            $("#quart").html(current_quarter);
+
+            $("#homescore").html(current_home);
+            $("#awayscore").html(current_away);
+
+        }
+        function pull_timer() {
+            $.getJSON("http://tingo.ddns.net:4005/game_current_timer", function(data) {
+                console.log(data);
+                data = data.data[0];
+                console.log(data);
+                latest_timer = data.timer;
+                current_quarter = data.quarter;
+                current_home = data.home.score;
+                current_away = data.away.score;
+                show_timer();
+            });
+
+        }
+
+        setInterval(function() {
+            pull_timer();
+        }, 1000);
+
+        pull_timer();
+
+    </script>
+
+</body></html>

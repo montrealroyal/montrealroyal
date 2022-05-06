@@ -1,55 +1,63 @@
 
-<!-- saved from url=(0106)http://tingo.ddns.net:4005/game_timer?fbclid=IwAR0cTRD9OnhhM7goQAqKq6WB1pGKFmXgBL0xBLN8wR5LdLX9DLs_2Wg0Zxw -->
+<!-- saved from url=(0037)http://tingo.ddns.net:4005/game_timer -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <style>
-            #warning_message {
-                color: red;
-                font-weight: bold;
-                display: none;
-            }
-            * {
-                font-size: 20px;
-            }
-            button {
-                padding: 10px;
-                margin: 20px;
-            }
-        </style>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        <h1>Game Timer</h1>
-        <div> <button id="quart" disabled="disabled">Q1</button>
-        <input type="text" id="timer_input" value="00:00" onkeyup="manual_reset();"></div><br>
-        <button onclick="reset_timer();">Reset</button>
-        <button onclick="play_pause_timer();" id="play_pause_btn">Play</button>
-        <div id="warning_message">Please pause before a manual reset</div>
-    
-        <div>
-            <button onclick="q1();" id="q1">Q1</button>
-            <button onclick="q2();" id="q2">Q2</button>
-            <button onclick="q3();" id="q3">Q3</button>
-            <button onclick="q4();" id="q3">Q4</button>
+    <style>
+        #warning_message {
+            color: red;
+            font-weight: bold;
+            display: none;
+        }
+        * {
+            font-size: 20px;
+        }
+        button {
+            padding: 10px;
+            margin: 20px;
+        }
+        .active_quarter {
+            font-weight: bold;
+            background-color: #e0e0e0;
 
-        </div>
-        <div>
-            <h1>AWAY</h1>
-            <input type="text" id="awayscore" value="0"><br>
-            <button onclick="Awayplus();" id="Awayplus">+</button>
-            <button onclick="Awayminus();" id="Awayminus">-</button>
-        </div>
-        <div>
-            <h1>HOME - MTL</h1>
-            <input type="text" id="homescore" value="0"><br>
-        <button onclick="Homeplus();" id="Homeplus">+</button>
-        <button onclick="Homeminus();" id="Homeplus">-</button>
-        </div>
-        <div id="warning_message">Please pause before a manual reset</div>
+        }
+    </style>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <h1>Game Timer</h1>
+    <div> <button id="quart" disabled="disabled">Q2</button>
+    <input type="text" id="timer_input" value="00:00" onkeyup="manual_reset();"></div><br>
+    <button onclick="reset_timer();">Reset</button>
+    <button onclick="play_pause_timer();" id="play_pause_btn">Play</button>
+    <div id="warning_message">Please pause before a manual reset</div>
+
+    <div>
+        <button onclick="q_change(&#39;Q1&#39;);" id="Q1" class="quarter">Q1</button>
+        <button onclick="q_change(&#39;Q2&#39;);" id="Q2" class="quarter active_quarter">Q2</button>
+        <button onclick="q_change(&#39;Q3&#39;);" id="Q3" class="quarter">Q3</button>
+        <button onclick="q_change(&#39;Q4&#39;);" id="Q4" class="quarter">Q4</button>
+    </div>
+    <div>
+        <h1>AWAY</h1>
+        <input type="text" id="awayscore" value="0" onchange="away_change(this.value);"><br>
+        <button onclick="away_change(current_away+1);" id="Awayplus">+</button>
+        <button onclick="away_change(current_away-1);" id="Awayminus">-</button>
+    </div>
+    <div>
+        <h1>HOME - MTL</h1>
+        <input type="text" id="homescore" value="0" onchange="home_change(this.value);"><br>
+    <button onclick="home_change(current_home+1);" id="Homeplus">+</button>
+    <button onclick="home_change(current_home-1);" id="Homeplus">-</button>
+    </div>
 
     <!-- Import jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./game_timer_files/jquery.min.js.téléchargement"></script>
     <script>
-        var latest_timer = 678;
+        var latest_timer = 12*60;
+        var current_quarter = 'Q1';
+        var current_home = 0;
+        var current_away = 0;
+
         var playing = false;
         function show_timer() {
             var minutes = Math.floor(latest_timer / 60);
@@ -57,6 +65,13 @@
             if (seconds < 10) {seconds = "0" + seconds;}
             if (minutes < 10) {minutes = "0" + minutes;}
             $("#timer_input").val(minutes + ":" + seconds);
+            $(".quarter").removeClass("active_quarter");
+            $("#" + current_quarter).addClass("active_quarter");
+            $("#quart").html(current_quarter);
+
+            $("#homescore").val(current_home);
+            $("#awayscore").val(current_away);
+
         }
         function reset_timer() {
             latest_timer = 12*60;
@@ -88,60 +103,51 @@
                     push_timer();
                 }
             }
-
             show_timer();
         }
+        function away_change(nval) {
+            current_away = nval;
+            push_timer();
+        }
+        function home_change(nval) {
+            current_home = nval;
+            push_timer();
+        }
+        function q_change(qval){
+            current_quarter = qval;
+            push_timer();
+        }
+
+
+        function push_timer() {
+            $.getJSON("http://tingo.ddns.net:4005/game_update/"+latest_timer+"/"+current_quarter+"/"+current_home+"/"+current_away);
+            show_timer();
+        }
+        function pull_timer() {
+            $.getJSON("http://tingo.ddns.net:4005/game_current_timer", function(data) {
+                console.log(data);
+                data = data.data[0];
+                console.log(data);
+                latest_timer = data.timer;
+                current_quarter = data.quarter;
+                current_home = data.home.score;
+                current_away = data.away.score;
+                show_timer();
+            });
+
+        }
+
         setInterval(function() {
             if (playing) {
                 if(latest_timer > 0) {
                     latest_timer--;
                     push_timer();
-                    show_timer();
                 }
             }
         }, 1000);
 
-
-        function Awayplus() {
-            var counter = parseInt($("#awayscore").val());
-            counter++;
-                $("#awayscore").val(counter);
-        }
-        function Awayminus() {
-            var counter = parseInt($("#awayscore").val());
-            counter--;
-                $("#awayscore").val(counter);
-        }
-
-        function Homeplus() {
-            var counter = parseInt($("#homescore").val());
-            counter++;
-                $("#homescore").val(counter);
-        }
-        function Homeminus() {
-            var counter = parseInt($("#homescore").val());
-            counter--;
-                $("#homescore").val(counter);
-        }
-
-        function q1(){
-            $("#quart").html("Q1")
-        }     
-        function q2(){
-            $("#quart").html("Q2")
-        }     
-        function q3(){
-            $("#quart").html("Q3")
-        }     
-        function q4(){
-            $("#quart").html("Q4")
-        }     
-
-
-        function push_timer() {
-            $.getJSON("http://tingo.ddns.net:4005/game_update_timer/"+latest_timer);
-        }
-        show_timer();
+        pull_timer();
 
     </script>
+
 </body></html>
