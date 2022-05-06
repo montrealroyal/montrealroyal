@@ -7,18 +7,84 @@
                 padding: 0px;
                 font-family: 'Roboto';
                 font-weight: 700;
-                color:#e0e0e0;
+                font-size: 500%;
+                color:#ffffff;
                 text-align: center;
+                vertical-align: middle;
             }
 
         div {
-            display: inline-block;
+            display:flex;
+            margin: auto;
+            padding: 0;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
         }
 
-        .container {
+
+
+        #container {
             height: 20%;
+            background-color: aqua;
+            position: fixed;
+            bottom: 0;
+            left:0;
+            width: 100%;
+            min-height: 200px;
+            margin: auto;
+            padding: 0;
+        }
+        #awayteam {
+            background-color: rgb(212, 17, 17);
+            bottom: 0;
+            left:0;
+            width: 20%;
+            margin: auto;
+            height: 100%;
+            min-height: 200px;
+
 
         }
+        #ascore {
+            background-color: rgb(163, 18, 18);
+            bottom: 0;
+            left:0;
+            width: 15%;
+            font-size: 150%;
+
+        }
+        #hometeam {
+            background-color: rgb(55, 28, 206);
+            bottom: 0;
+            left:0;
+            width: 20%;
+
+        }
+        #hscore {
+            background-color: rgb(43, 11, 158);
+            bottom: 0;
+            left:0;
+            width: 15%;
+            font-size: 150%;
+
+        }
+        #timer{
+            background-color: rgb(12, 12, 12);
+            bottom: 0;
+            left:0;
+            width: 30%;
+        }
+        #quart{
+            display: inline-block;;
+            bottom: 2%; 
+        }
+        #timer_input{
+            display: inline-block;;
+            margin-top: 2%;
+            top: 2%;
+        }
+
         button {
             padding: 10px;
             margin: 20px;
@@ -31,14 +97,16 @@
 <body>
     <div id="container">
 
-        <div>BOS</div>
-        <div><span id="awayscore">4</span></div>
-        <div>
-            <div><span id="timer_input">12:00</span></div>
-            <div><span id="quart">Q2</span></div>
+        <div id="awayteam">BOS</div>
+        <div id="ascore"><span id="awayscore">4</span></div>
+        <div id="timer">
+         <span id="timer_input">12:00</span> 
+         <span> ...   </span>
+        <br/>
+            <span id="quart">Q2</span>
         </div>
-        <div><span id="homescore">0</span></div>
-        <div>MTL</div>
+        <div id="hscore"><span id="homescore">0</span></div>
+        <div id="hometeam">MTL</div>
 
     <!-- Import jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
