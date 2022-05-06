@@ -120,11 +120,11 @@
 
 
         function push_timer() {
-            $.getJSON("http://tingo.ddns.net:4005/game_update/"+latest_timer+"/"+current_quarter+"/"+current_home+"/"+current_away);
+            $.getJSON("https://tingo.ddns.net:4005/game_update/"+latest_timer+"/"+current_quarter+"/"+current_home+"/"+current_away);
             show_timer();
         }
         function pull_timer() {
-            $.getJSON("http://tingo.ddns.net:4005/game_current_timer", function(data) {
+            $.getJSON("https://tingo.ddns.net:4005/game_current_timer", function(data) {
                 console.log(data);
                 data = data.data[0];
                 console.log(data);
