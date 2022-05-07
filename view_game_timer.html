@@ -51,7 +51,7 @@
             bottom: 0;
             left:0;
             width: 15%;
-            font-size: 150%;
+            font-size: 180%;
 
         }
         #hometeam {
@@ -66,7 +66,7 @@
             bottom: 0;
             left:0;
             width: 15%;
-            font-size: 150%;
+            font-size: 180%;
 
         }
         #timer{
@@ -76,13 +76,12 @@
             width: 30%;
         }
         #quart{
-            display: inline-block;;
-            bottom: 2%; 
+            bottom: 2%;
+            font-size: 80% ;
         }
         #timer_input{
-            display: inline-block;;
-            margin-top: 2%;
             top: 2%;
+            font-size: 180% ;
         }
 
         button {
@@ -100,10 +99,10 @@
         <div id="awayteam">BOS</div>
         <div id="ascore"><span id="awayscore">4</span></div>
         <div id="timer">
-         <span id="timer_input">12:00</span> 
-         <span> ...   </span>
+            <span id="quart">Q2</span><span>    </span>
+            <span id="timer_input">12:00</span> 
         <br/>
-            <span id="quart">Q2</span>
+        
         </div>
         <div id="hscore"><span id="homescore">0</span></div>
         <div id="hometeam">MTL</div>
@@ -146,7 +145,7 @@
 
         setInterval(function() {
             pull_timer();
-        }, 500);
+        }, 1000);
 
         pull_timer();
 
